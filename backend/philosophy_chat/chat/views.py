@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def subject_chat_room():
+    pass
