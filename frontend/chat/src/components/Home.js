@@ -1,53 +1,48 @@
 import React, { useState, useEffect} from 'react';
 import { w3cwebsocket as WebSocket } from 'websocket';
-import GetInChat from './GetInChat';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Card from '@mui/material/Card';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
+
+
 
 
 function Home() {
 
-    const [login, setLogin] = useState('false');
+    const [login, setLogin] = useState(false);
     const [messages, setMessages] = useState([]);
     const [value, setValue] = useState('');
     const [name, setName] = useState('');
     const [room, setRoom] = useState('philosophy');
 
-    const client = new WebSocket('ws://')
+    const client = new WebSocket('ws://127.0.0.1:8000/ws/chat/' + room + '/')
 
     const onButtonClicked = (e) => {
-        client.send(JSON.stringfy({
+        client.send(JSON.stringify({
             type: "message",
             message: value,
             name: name
         }));
-        value = ''
+        setValue('')
         e.preventDefault();
 
     }
-
-    function componentDidMount() {
-        client.onopen = () => {
-            console.log('Websocket Client Connected');
-        };
+   
+    useEffect(() => {
         client.onmessage = (message) => {
             const dataFromServer = JSON.parse(message.data);
-            console.log('got reply! ', dataFromServer.type);
-            if (dataFromServer) {
-                setMessages((state) => 
-                {[...state.messages,
-                {
-                    msg: dataFromServer.message,
-                    name: dataFromServer.name,
-                }]
-            })
-
-            }
+            setMessages(() => [...messages, {
+                msg: dataFromServer.message,
+                name: dataFromServer.name,}])
         }
+    }, [client]);
 
-    }
-
-
+    console.log(messages);
     return(
         <Container component="main" maxWidth="xs">
             {login ? 
@@ -62,11 +57,10 @@ function Home() {
                          </Card>
                       </>)}
                   </Paper>
-                  <form noValidate onSubmit={onButtonClicked}>
-                      <Textfield
+                  
+                      <TextField
                          id="outlined-helperText"
                          label="Make a comment"
-                         defaultValue="default value"
                          variant="outlined"
                          value={value}
                          fullWidth
@@ -80,11 +74,12 @@ function Home() {
                            fullWidth
                            variant="contained"
                            color="primary"
+                           onClick={onButtonClicked}
                            >
                                Start Chatting
                            </Button>
                            
-                  </form>
+                
               </div>
               :
               <Box 
@@ -99,7 +94,7 @@ function Home() {
                    <Typography component="h1" variant="h5">
                        Meaningful Chat
                    </Typography>
-                   <form noValidate onSubmit={value => setLogin('true')}></form>
+                  
                    <TextField
                      required
                      id="email"
@@ -125,6 +120,7 @@ function Home() {
                            fullWidth
                            variant="contained"
                            color="primary"
+                           onClick={() => setLogin(true)}
                            >
                                Start Chatting
                            </Button>
