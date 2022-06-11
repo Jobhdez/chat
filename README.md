@@ -16,7 +16,7 @@ You can run the backend code (with templates) to interact with the chat app.
 * run server by `src/redis-server`
 
 3. run the django server
-* `python3 manage.py runserver
+* `python3 manage.py runserver`
 
 4. `npm start` from `frontend/chat`
     
