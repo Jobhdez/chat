@@ -9,7 +9,7 @@ You can run the backend code (with templates) to interact with the chat app.
 
 2. install Redis and run the server: 
 
-* go to `https:// redis.io/download`
+* go to `https://redis.io/download`
 * `unzip`
 * `cd redis-<version>`
 * `make`
